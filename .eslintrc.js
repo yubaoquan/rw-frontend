@@ -12,7 +12,7 @@ module.exports = {
     'plugin:import/typescript',
   ],
   parserOptions: {
-    project: './tsconfig.json',
+    project: './tsconfig.lint.json',
     ecmaFeatures: { jsx: true },
     ecmaVersion: 12,
     sourceType: 'module',
