@@ -27,8 +27,10 @@ module.exports = {
       alias: {
         map: [
           ['api', './src/api'],
+          ['components', './src/components'],
           ['config', './src/config'],
           ['layout', './src/layout'],
+          ['types', './src/types'],
           ['utils', './src/utils'],
         ],
         extensions: ['.tsx', '.ts'],
@@ -46,6 +48,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-loop-func': 'off',
+    'react/jsx-one-expression-per-line': 'off',
 
     'brace-style': ['error', '1tbs'],
     '@typescript-eslint/no-extra-parens': ['error'],
