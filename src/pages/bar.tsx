@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getArticles } from 'api/index';
-
-interface IArticle {
-  title: string;
-}
+import { Article } from 'types';
 
 const bar = () => {
-  const [articles, setArticles] = useState<IArticle[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const showArticals = async () => {
     try {
       const resp = await getArticles();
@@ -20,11 +17,13 @@ const bar = () => {
     showArticals();
   }, []);
 
+  console.info('this is bar', articles.length);
+
   return (
     <>
       <div>this is bar</div>
       <div>
-        {articles.map((article) => <div>{article.title}</div>)}
+        {articles.map((article) => <div key={article.slug}>{article.title}</div>)}
       </div>
     </>
   );

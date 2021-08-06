@@ -1,41 +1,23 @@
 import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Articles from 'components/home/articles';
 import Pagination from 'components/home/pagination';
 import Tags from 'components/home/tags';
-import { Article } from 'types';
+import ArticleStore from 'store/article';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const home: React.FC = () => {
-  console.info(123);
-  const articles: Article[] = [
-    {
-      slug: '123',
-      title: '第一篇文章',
-      description: '456',
-      createdAt: 123,
-      favorited: true,
-      favoritesCount: 1,
-      marking: true,
-      tagList: ['aaa', 'bbb'],
-      author: { username: 'xiaoming' },
-    },
-    {
-      slug: '124',
-      title: '第2篇文章',
-      description: '456',
-      createdAt: 123,
-      favorited: false,
-      favoritesCount: 1,
-      marking: false,
-      tagList: ['aaa', 'ccc'],
-      author: { username: 'xiaoming5' },
-    },
-  ];
+const home: React.FC<{ store: ArticleStore }> = observer(({ store }) => {
+  console.info('this is home ');
+  const { fetchArticles, articles } = store;
+  React.useEffect(() => {
+    fetchArticles();
+  }, []);
+
   const tags: any = [];
   const totalPages = 0;
   const page = 0;
@@ -114,6 +96,6 @@ const home: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default home;

@@ -30,6 +30,7 @@ module.exports = {
           ['components', './src/components'],
           ['config', './src/config'],
           ['layout', './src/layout'],
+          ['store', './src/store'],
           ['types', './src/types'],
           ['utils', './src/utils'],
         ],
