@@ -29,13 +29,11 @@ const login: FC = () => {
             </p>
 
             <ul className="error-messages">
-              <ul className="error-messages">
-                {
-                  Object.entries(errors)
-                    .map(([prop, value]: any) => (value as string[])
-                      .map((message, index) => <li key={index}>{{ prop }}: {{ message }}</li>))
-                }
-              </ul>
+              {
+                Object.entries(errors)
+                  .map(([prop, value]: any) => (value as string[])
+                    .map((message, index) => <li key={index}>{{ prop }}: {{ message }}</li>))
+              }
             </ul>
 
             <form onSubmit={handleSubmit}>

@@ -4,13 +4,16 @@ import { FC, useState, FormEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { register } from 'api/user';
 
+interface Errors {
+  [field: string]: string[];
+}
 const registerPage: FC = () => {
   const history = useHistory();
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [errors, setErrors] = useState<Errors>({});
 
   const handleUsernameChange = (e: FormEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value);
@@ -35,21 +38,17 @@ const registerPage: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     try {
       e.preventDefault();
-      console.info(username, email, password);
       setLoading(true);
       const res = await register({ username, email, password });
       console.info(res);
       commonAfter(res.data.user);
     } catch (err: any) {
       console.error(err);
-      console.info(err.response?.data);
-      setError(err.response?.data?.error || error);
+      setErrors(err.response?.data?.errors || errors);
     } finally {
       setLoading(false);
     }
   };
-
-  console.info('errors:', error);
 
   return (
     <div className="auth-page">
@@ -61,11 +60,15 @@ const registerPage: FC = () => {
               <Link to="login">Have an account?</Link>
             </p>
 
-            {error && (
             <ul className="error-messages">
-              <li>{error}</li>
+              {
+                Object.entries(errors)
+                  .map(([fieldName, fieldErrors]) => fieldErrors
+                    .map((message, index) => {
+                      return <li key={`${fieldName}-${index}`}>{fieldName}: {message}</li>;
+                    }))
+              }
             </ul>
-            )}
 
             <form onSubmit={handleSubmit}>
               <fieldset className="form-group">

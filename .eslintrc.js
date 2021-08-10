@@ -42,6 +42,7 @@ module.exports = {
     'no-console': 'off',
     'no-continue': 'off',
     'no-loop-func': 'off',
+    'arrow-body-style': 'off',
     'consistent-return': 'off',
     'import/extensions': 'off',
     'react/react-in-jsx-scope': 'off',
