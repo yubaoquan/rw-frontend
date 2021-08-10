@@ -12,7 +12,6 @@ function useQuery() {
 }
 
 const home: React.FC<{ store: ArticleStore }> = observer(({ store }) => {
-  console.info('this is home ');
   const { fetchArticles, articles } = store;
   React.useEffect(() => {
     fetchArticles();
@@ -30,6 +29,41 @@ const home: React.FC<{ store: ArticleStore }> = observer(({ store }) => {
     console.info('123');
   };
 
+  const renderNavItem = ({ className = '', pathname = '/', search = '', title }: {
+    className: string;
+    pathname?: string;
+    search: string;
+    title: string;
+  }) => (
+    <li className="nav-item" v-if="user">
+      <Link className={className} to={{ pathname, search }}>{title}</Link>
+    </li>
+  );
+
+  const nav = (
+    <div className="feed-toggle">
+      <ul className="nav nav-pills outline-active">
+        {renderNavItem({
+          className: classnames('nav-link', { active: tab === 'your_feed' }),
+          search: '?tab=your_feed',
+          title: 'Your Feed',
+        })}
+
+        {renderNavItem({
+          className: classnames('nav-link', { active: tab === 'global_feed' }),
+          search: '?tab=global_feed',
+          title: 'Global Feed',
+        })}
+
+        {tag && renderNavItem({
+          className: classnames('nav-link', 'active'),
+          search: `?tag=${tag}`,
+          title: `#${tag}`,
+        })}
+      </ul>
+    </div>
+  );
+
   return (
     <>
       <div className="home-page">
@@ -43,46 +77,7 @@ const home: React.FC<{ store: ArticleStore }> = observer(({ store }) => {
         <div className="container page">
           <div className="row">
             <div className="col-md-9">
-              <div className="feed-toggle">
-                <ul className="nav nav-pills outline-active">
-                  <li className="nav-item" v-if="user">
-                    <Link
-                      className={classnames('nav-link', { active: tab === 'your_feed' })}
-                      to={{
-                        pathname: '/',
-                        search: '?tab=your_feed',
-                      }}
-                    >Your Feed
-                    </Link
-                >
-                  </li>
-                  <li className="nav-item">
-                    <Link
-                      className={classnames('nav-link', { active: tab === 'global_feed' })}
-                      to={{
-                        pathname: '/',
-                        search: '?tab=global_feed',
-                      }}
-                    >Global Feed
-                    </Link
-                >
-                  </li>
-                  {tag && (
-                  <li className="nav-item">
-                    <Link
-                      className="nav-link active"
-                      to={{
-                        pathname: '/',
-                        search: `?tag=${tag}`,
-                      }}
-                    >#{tag}
-                    </Link
-                >
-                  </li>
-                  )}
-                </ul>
-              </div>
-
+              {nav}
               <Articles articles={articles} handleMark={handleMarkArticle} />
             </div>
 

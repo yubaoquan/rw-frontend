@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { backendBase } from 'config/index';
 
-const request = axios.create({ baseURL: backendBase });
+export const request = axios.create({ baseURL: backendBase });
 
 export function genApi(config: any) {
   return () => request(config);
