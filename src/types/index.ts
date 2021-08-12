@@ -13,3 +13,14 @@ export interface Article {
   title: string;
   description: string;
 }
+
+export interface User {
+  username: string;
+  token: string;
+  email: string;
+  image?: string;
+}
+
+export interface FormErrors {
+  [field: string]: string[];
+}

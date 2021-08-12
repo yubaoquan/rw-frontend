@@ -5,7 +5,6 @@ interface PatinationProps {
   current: number;
 }
 const Pagination: React.FC<PatinationProps> = ({ total, current }: PatinationProps) => {
-  console.info('1');
   return (
     <div>{total} / {current}</div>
   );

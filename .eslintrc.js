@@ -46,6 +46,7 @@ module.exports = {
     'consistent-return': 'off',
     'import/extensions': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/require-default-props': 'off',
     'react/no-unescaped-entities': 'off',
     'react/jsx-props-no-spreading': 'off',
     'import/prefer-default-export': 'off',

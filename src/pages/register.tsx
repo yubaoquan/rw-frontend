@@ -1,19 +1,23 @@
 /* eslint-disable react/no-array-index-key */
 import Cookie from 'js-cookie';
+import { observer } from 'mobx-react-lite';
 import { FC, useState, FormEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { register } from 'api/user';
+import UserStore from 'store/user';
+import { FormErrors } from 'types';
 
-interface Errors {
-  [field: string]: string[];
+interface Props {
+  userStore: UserStore;
 }
-const registerPage: FC = () => {
+
+const registerPage: FC<Props> = observer(({ userStore }) => {
   const history = useHistory();
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleUsernameChange = (e: FormEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value);
@@ -28,10 +32,8 @@ const registerPage: FC = () => {
   };
 
   const commonAfter = (user: any) => {
-    Cookie.set('user', user);
-
-    // TODO:store set user
-    // setUser(user);
+    Cookie.set('user', JSON.stringify(user));
+    userStore.setUser(user);
     history.push('/');
   };
 
@@ -118,6 +120,6 @@ const registerPage: FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default registerPage;

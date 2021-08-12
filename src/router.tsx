@@ -1,19 +1,26 @@
 import { Switch, Route } from 'react-router-dom';
 import ArticleStore from 'store/article';
+import UserStore from 'store/user';
 import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
 
-const articleStore = new ArticleStore();
+interface MyRouterProps {
+  userStore: UserStore;
+  articleStore: ArticleStore;
+}
 
-export default function MyRouter() {
+export default function MyRouter({ userStore, articleStore }: MyRouterProps) {
   return (
     <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
+      <Route path="/login">
+        <Login userStore={userStore} />
+      </Route>
+      <Route path="/register">
+        <Register userStore={userStore} />
+      </Route>
       <Route path="/">
-
-        <Home store={articleStore} />
+        <Home articleStore={articleStore} userStore={userStore} />
       </Route>
     </Switch>
   );

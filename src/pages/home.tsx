@@ -6,13 +6,22 @@ import Articles from 'components/home/articles';
 import Pagination from 'components/home/pagination';
 import Tags from 'components/home/tags';
 import ArticleStore from 'store/article';
+import UserStore from 'store/user';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const home: React.FC<{ store: ArticleStore }> = observer(({ store }) => {
-  const { fetchArticles, articles } = store;
+interface HomePageProps {
+  articleStore: ArticleStore;
+  userStore: UserStore;
+}
+
+const home: React.FC<HomePageProps> = observer((stores) => {
+  const { fetchArticles, articles } = stores.articleStore;
+  const { user } = stores.userStore;
+  console.info(user);
+
   React.useEffect(() => {
     fetchArticles();
   }, []);

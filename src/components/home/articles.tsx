@@ -9,8 +9,6 @@ interface ArticlesProps {
 }
 
 const Articles: React.FC<ArticlesProps> = ({ articles, handleMark }: ArticlesProps) => {
-  console.info('1');
-
   return (
     <div>
       {

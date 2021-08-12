@@ -1,9 +1,20 @@
 /* eslint-disable react/no-array-index-key */
+import Cookie from 'js-cookie';
+import { observer } from 'mobx-react-lite';
 import { FC, useState, FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { login } from 'api/user';
+import UserStore from 'store/user';
+import { FormErrors } from 'types';
 
-const login: FC = () => {
-  const errors: any = {};
+interface Props {
+  userStore: UserStore;
+}
+
+const loginPage: FC<Props> = observer(({ userStore }) => {
+  const history = useHistory();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -16,7 +27,26 @@ const login: FC = () => {
     setPassword(e.currentTarget.value);
   };
 
-  const handleSubmit = () => console.info('submit');
+  const commonAfter = (user: any) => {
+    Cookie.set('user', JSON.stringify(user));
+    userStore.setUser(user);
+    history.push('/');
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      const res = await login({ email, password });
+      console.info(res);
+      commonAfter(res.data.user);
+    } catch (err: any) {
+      console.error(err);
+      setErrors(err.response?.data?.errors || errors);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-page">
@@ -44,6 +74,7 @@ const login: FC = () => {
                   placeholder="Email"
                   required
                   minLength={8}
+                  disabled={loading}
                   value={email}
                   onChange={handleEmailChange}
                 />
@@ -54,12 +85,14 @@ const login: FC = () => {
                   type="password"
                   placeholder="Password"
                   required
+                  disabled={loading}
                   value={password}
                   onChange={handlePasswordChange}
                 />
               </fieldset>
               <button
                 className="btn btn-lg btn-primary pull-xs-right"
+                disabled={loading}
                 type="submit"
               >
                 Sign in
@@ -70,6 +103,6 @@ const login: FC = () => {
       </div>
     </div>
   );
-};
+});
 
-export default login;
+export default loginPage;
