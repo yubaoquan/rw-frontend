@@ -17,22 +17,34 @@ interface HomePageProps {
   userStore: UserStore;
 }
 
+enum FeedType {
+  GLOBAL = 'global_feed',
+  YOUR = 'your_feed',
+}
+
 const home: React.FC<HomePageProps> = observer((stores) => {
-  const { fetchArticles, articles } = stores.articleStore;
+  const {
+    fetchArticles,
+    fetchTags,
+    articles,
+    tags,
+    loadingArticles,
+    loadingTags,
+  } = stores.articleStore;
   const { user } = stores.userStore;
-  console.info(user);
+  console.info(tags);
 
   React.useEffect(() => {
     fetchArticles();
+    fetchTags();
   }, []);
 
-  const tags: any = [];
   const totalPages = 0;
   const page = 0;
 
   const query = useQuery();
   const tag = query.get('tag');
-  const tab = query.get('tab');
+  const tab = user ? query.get('tab') ?? FeedType.GLOBAL : FeedType.GLOBAL;
 
   const handleMarkArticle = () => {
     console.info('123');
@@ -52,14 +64,14 @@ const home: React.FC<HomePageProps> = observer((stores) => {
   const nav = (
     <div className="feed-toggle">
       <ul className="nav nav-pills outline-active">
-        {renderNavItem({
-          className: classnames('nav-link', { active: tab === 'your_feed' }),
+        {user && renderNavItem({
+          className: classnames('nav-link', { active: tab === FeedType.YOUR }),
           search: '?tab=your_feed',
           title: 'Your Feed',
         })}
 
         {renderNavItem({
-          className: classnames('nav-link', { active: tab === 'global_feed' }),
+          className: classnames('nav-link', { active: tab === FeedType.GLOBAL }),
           search: '?tab=global_feed',
           title: 'Global Feed',
         })}
@@ -87,11 +99,15 @@ const home: React.FC<HomePageProps> = observer((stores) => {
           <div className="row">
             <div className="col-md-9">
               {nav}
-              <Articles articles={articles} handleMark={handleMarkArticle} />
+              {
+                loadingArticles
+                  ? <div className="article-preview">Loading articles...</div>
+                  : <Articles articles={articles} handleMark={handleMarkArticle} />
+              }
             </div>
 
             <div className="col-md-3">
-              <Tags tags={tags} />
+              <Tags tags={tags} loading={loadingTags} />
             </div>
           </div>
 

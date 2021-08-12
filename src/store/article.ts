@@ -1,38 +1,26 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import { getArticles } from 'api/index';
+import { getArticles, getTags } from 'api/index';
 import { Article } from 'types';
 
 export default class ArticleStore {
   articles: Article[] = [];
 
+  tags: string[] = [];
+
   articlesCount: number = 0;
 
-  loading = false;
+  loadingArticles = false;
+
+  loadingTags = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  /**  计算当前已吃和未吃苹果的状态 */
-  // get status() {
-  //   const status = {
-  //     appleNow: { quantity: 0, weight: 0 },
-  //     appleEaten: { quantity: 0, weight: 0 },
-  //   };
-
-  //   this.apples.forEach((apple) => {
-  //     const selector = apple.isEaten ? 'appleEaten' : 'appleNow';
-  //     status[selector].quantity++;
-  //     status[selector].weight += apple.weight;
-  //   });
-
-  //   return status;
-  // }
-
   /* 获取文章列表的异步操作 */
   fetchArticles = async () => {
-    if (this.loading) return;
-    this.loading = true;
+    if (this.loadingArticles) return;
+    this.loadingArticles = true;
 
     try {
       const resp = await getArticles();
@@ -44,7 +32,26 @@ export default class ArticleStore {
       console.error(e);
     } finally {
       runInAction(() => {
-        this.loading = false;
+        this.loadingArticles = false;
+      });
+    }
+  };
+
+  /** 获取标签列表 */
+  fetchTags = async () => {
+    if (this.loadingTags) return;
+    this.loadingTags = true;
+
+    try {
+      const resp = await getTags();
+      runInAction(() => {
+        this.tags = resp.data.tags;
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      runInAction(() => {
+        this.loadingTags = false;
       });
     }
   };

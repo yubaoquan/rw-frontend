@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Article } from 'types';
+import styles from './article.module.scss';
 
 interface ArticlesProps {
   articles: Article[];
@@ -16,7 +17,7 @@ const Articles: React.FC<ArticlesProps> = ({ articles, handleMark }: ArticlesPro
           <div className="article-preview" key={article.slug}>
             <div className="article-meta">
               <Link to={`/profile/${article.author.username}`}>
-                <img src="article.author.image" alt="author-img" />
+                <img src="article.author.image" alt="author-img" className={styles.userAvator} />
               </Link>
               <div className="info">
                 <Link to={`/profile/${article.author.username}`} className="author">
