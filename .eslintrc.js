@@ -52,6 +52,9 @@ module.exports = {
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-loop-func': 'off',
     'react/jsx-one-expression-per-line': 'off',
+    'jsx-a11y/control-has-associated-label': 'off',
+    'jsx-a11y/interactive-supports-focus': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
 
     'brace-style': ['error', '1tbs'],
     '@typescript-eslint/no-extra-parens': ['error'],

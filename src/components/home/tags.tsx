@@ -6,7 +6,7 @@ interface TagsProps {
   loading: boolean;
 }
 
-const Tags: FC<TagsProps> = ({ tags, loading }: TagsProps) => (
+const tagsComponent: FC<TagsProps> = ({ tags, loading }: TagsProps) => (
   <div className="sidebar">
     <p>Popular Tags</p>
     {loading
@@ -34,4 +34,4 @@ const Tags: FC<TagsProps> = ({ tags, loading }: TagsProps) => (
   </div>
 );
 
-export default Tags;
+export default tagsComponent;

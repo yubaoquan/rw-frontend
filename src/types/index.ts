@@ -1,5 +1,7 @@
 export interface Author {
   username: string;
+  image: string;
+  following: boolean;
 }
 
 export interface Article {
@@ -23,4 +25,10 @@ export interface User {
 
 export interface FormErrors {
   [field: string]: string[];
+}
+
+export interface Comment {
+  id: number | string;
+  author: User;
+  createdAt: number;
 }

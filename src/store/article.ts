@@ -18,12 +18,15 @@ export default class ArticleStore {
   }
 
   /* 获取文章列表的异步操作 */
-  fetchArticles = async () => {
+  fetchArticles = async (
+    { limit = 10, offset = 0, tag }:
+    { limit?: number; offset?: number; tag?: string },
+  ) => {
     if (this.loadingArticles) return;
     this.loadingArticles = true;
 
     try {
-      const resp = await getArticles();
+      const resp = await getArticles({ params: { limit, offset, tag } });
       runInAction(() => {
         this.articles = resp.data.articles;
         this.articlesCount = resp.data.articlesCount;

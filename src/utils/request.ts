@@ -7,7 +7,8 @@ export function genApi(config: any) {
   return () => request(config);
 }
 
-export const get = (url: string, config = {}) => () => request({
+export const get = (url: string, baseConfig = {}) => (config = {}) => request({
+  ...baseConfig,
   ...config,
   url,
   method: 'GET',

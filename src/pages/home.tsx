@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { FC, useEffect } from 'react';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import Articles from 'components/home/articles';
 import Pagination from 'components/home/pagination';
 import Tags from 'components/home/tags';
@@ -22,32 +22,40 @@ enum FeedType {
   YOUR = 'your_feed',
 }
 
-const home: React.FC<HomePageProps> = observer((stores) => {
+const home: FC<HomePageProps> = observer((stores) => {
   const {
     fetchArticles,
     fetchTags,
     articles,
+    articlesCount,
     tags,
     loadingArticles,
     loadingTags,
   } = stores.articleStore;
   const { user } = stores.userStore;
-  console.info(tags);
 
-  React.useEffect(() => {
-    fetchArticles();
+  const articlesPerPage = 3;
+
+  const query = useQuery();
+  const history = useHistory();
+  const tag = query.get('tag') || undefined;
+  const page = +(query.get('page') || 1);
+  const tab = user ? query.get('tab') ?? FeedType.GLOBAL : FeedType.GLOBAL;
+
+  useEffect(() => {
     fetchTags();
   }, []);
 
-  const totalPages = 0;
-  const page = 0;
-
-  const query = useQuery();
-  const tag = query.get('tag');
-  const tab = user ? query.get('tab') ?? FeedType.GLOBAL : FeedType.GLOBAL;
+  useEffect(() => {
+    fetchArticles({ limit: articlesPerPage, offset: (page - 1) * articlesPerPage, tag });
+  }, [page, tag]);
 
   const handleMarkArticle = () => {
-    console.info('123');
+    if (user) {
+      console.info('mark like');
+    } else {
+      history.push('/register');
+    }
   };
 
   const renderNavItem = ({ className = '', pathname = '/', search = '', title }: {
@@ -65,13 +73,13 @@ const home: React.FC<HomePageProps> = observer((stores) => {
     <div className="feed-toggle">
       <ul className="nav nav-pills outline-active">
         {user && renderNavItem({
-          className: classnames('nav-link', { active: tab === FeedType.YOUR }),
+          className: classnames('nav-link', { active: tab === FeedType.YOUR && !tag }),
           search: '?tab=your_feed',
           title: 'Your Feed',
         })}
 
         {renderNavItem({
-          className: classnames('nav-link', { active: tab === FeedType.GLOBAL }),
+          className: classnames('nav-link', { active: tab === FeedType.GLOBAL && !tag }),
           search: '?tab=global_feed',
           title: 'Global Feed',
         })}
@@ -84,6 +92,8 @@ const home: React.FC<HomePageProps> = observer((stores) => {
       </ul>
     </div>
   );
+
+  const totalPages = Math.ceil(articlesCount / articlesPerPage);
 
   return (
     <>

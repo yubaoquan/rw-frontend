@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import * as React from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Article } from 'types';
 import styles from './article.module.scss';
@@ -9,7 +9,7 @@ interface ArticlesProps {
   handleMark: () => void;
 }
 
-const Articles: React.FC<ArticlesProps> = ({ articles, handleMark }: ArticlesProps) => {
+const articlesComponent: FC<ArticlesProps> = ({ articles, handleMark }: ArticlesProps) => {
   return (
     <div>
       {
@@ -52,4 +52,4 @@ const Articles: React.FC<ArticlesProps> = ({ articles, handleMark }: ArticlesPro
   );
 };
 
-export default Articles;
+export default articlesComponent;
